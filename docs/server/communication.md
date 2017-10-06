@@ -7,11 +7,11 @@
 
 ## ServerSocket
 
-#### <a href="#serverSocket.send" name="serverSocket.send">#</a> new ServerSocket()
+<a href="#serverSocket.send" name="serverSocket.send">#</a> __new__ ServerSocket()
 
 
-#### <a href="#serverSocket.send" name="serverSocket.send">#</a> serverSocket.send()
+<a href="#serverSocket.send" name="serverSocket.send">#</a> serverSocket.__send__()
 
-#### <a href="#serverSocket.send" name="serverSocket.send">#</a> serverSocket.sendBroadcast()
+<a href="#serverSocket.send" name="serverSocket.send">#</a> serverSocket.__sendBroadcast__()
 
-#### <a href="#serverSocket.send" name="serverSocket.send">#</a> serverSocket.on()
+<a href="#serverSocket.send" name="serverSocket.send">#</a> serverSocket.__on__()
