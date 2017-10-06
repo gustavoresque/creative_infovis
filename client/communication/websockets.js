@@ -7,19 +7,22 @@
 
 var AppSocket = function () {
     
-    var myappsocket = {};
+    var myappsocket = this;
     var socket = new WebSocket("ws://" + (location.host.split(":")[0]) + ":6661");
 
     myappsocket.status = {
         open: false
     };
     
+    myappsocket.callbacks = {};
+    
     socket.onopen = function () {
         myappsocket.status.open = true;
         //socket.send(JSON.stringify({email: "email", password: "id"}));
         console.log("connection open!");
         if(myappsocket.callbacks.open) myappsocket.callbacks.open();
-    };
+        
+   };
 
     //método chamado quando ocorre um erro no socket de comunicação com servidor.
     socket.onerror = function (e) {
@@ -38,6 +41,8 @@ var AppSocket = function () {
     };
 
     myappsocket.socket = socket;
+    
+    return myappsocket;
 };
 
 //Enviando requisições e recencendo no callback.
@@ -45,9 +50,15 @@ AppSocket.prototype.send = function (act, msg) {
     this.socket.send(JSON.stringify({act: act, msg: msg}));
 };
 
-AppSocket.prototype.callbacks = {};
-
 AppSocket.prototype.on = function(eventName, callback_func){
-    AppSocket.callbacks[eventName] = callback_func;
+    this.callbacks[eventName] = callback_func;
 };
+
+
+var mysocket = new AppSocket();
+console.log(mysocket);
+mysocket.on("open", function(){
+    console.log("deu certo");
+    mysocket.send("tools", "olá")
+});
 

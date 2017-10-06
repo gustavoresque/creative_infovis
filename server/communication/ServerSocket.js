@@ -15,19 +15,21 @@ String.prototype.endsWith = function (suffix) {
 
 var ServerSocket  = function(){
     var WebSocketServer = require('ws').Server;
-    this.wss = new WebSocketServer({port: 6661});
-    var callbacks = {};
-    
-    this.callbacks = callbacks;
+    var self = this;
+    self.wss = new WebSocketServer({port: 6661});
 
-    this.wss.on('connection', function (socket) {
+    
+    self.callbacks = {};
+
+    self.wss.on('connection', function (socket) {
 
 
         socket.on('message', function (message, flags) {
+            
             if (!flags.binary) {
                 var objMsg = JSON.parse(message);
-                if (callbacks[objMsg.act])
-                    callbacks[objMsg.act](socket, objMsg.msg);
+                if (self.callbacks[objMsg.act])
+                    self.callbacks[objMsg.act](socket, objMsg.msg);
             }
         });
         
@@ -38,16 +40,18 @@ var ServerSocket  = function(){
         
     });
     
-    this.wss.on("close", function(err){console.log("closed");console.log(err);});
-    this.wss.on("error", function(err){console.log("error");console.log(err);});
+    self.wss.on("close", function(err){console.log("closed");console.log(err);});
+    self.wss.on("error", function(err){console.log("error");console.log(err);});
+    
+    self.wss.on("open", function(err){console.log("open on port 6661");console.log(err);});
 
-    this.wss.broadcast = function (data) {
-        wss.clients.forEach(function (client) {
+    self.wss.broadcast = function (data) {
+        self.wss.clients.forEach(function (client) {
             client.send(data);
         });
     };
     
-    
+    return self;
 };
 
 ServerSocket.prototype.send = function(client, act, msg){
@@ -61,3 +65,6 @@ ServerSocket.prototype.sendBroadcast = function(act, msg){
 ServerSocket.prototype.on = function(act, callback){
     this.callbacks[act] = callback;
 };
+
+
+module.exports = ServerSocket;
