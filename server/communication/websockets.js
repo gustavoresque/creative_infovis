@@ -13,7 +13,7 @@ String.prototype.endsWith = function (suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
-var SocketServer  = function(){
+var ServerSocket  = function(){
     var WebSocketServer = require('ws').Server;
     this.wss = new WebSocketServer({port: 6661});
     var callbacks = {};
@@ -50,14 +50,14 @@ var SocketServer  = function(){
     
 };
 
-SocketServer.prototype.send = function(client, act, msg){
+ServerSocket.prototype.send = function(client, act, msg){
     client.send(JSON.stringify({act: act, msg: msg}));
 };
 
-SocketServer.prototype.sendBroadcast = function(act, msg){
+ServerSocket.prototype.sendBroadcast = function(act, msg){
     this.wss.broadcast(JSON.stringify({act: act, msg: msg}));
 };
 
-SocketServer.prototype.on = function(act, callback){
-    this.callbacks[act] = callback;;
+ServerSocket.prototype.on = function(act, callback){
+    this.callbacks[act] = callback;
 };
