@@ -11,26 +11,50 @@ Sqlite.prototype.getTables = function(database_name, callback){
     var knex = require('knex')({
         client: 'sqlite3',
         connection: {
-            filename: "./sample.sqlite"
+            filename: "./"+database_name+".sqlite"
         },
         useNullAsDefault: true
     });
-    knex('sqlite_master').select('name')
+    knex('sqlite_master').where({
+        'type': 'table'
+    })
+        .select('name')
         .then((res) => {
-            html = tableify(res);
+            var html = tableify(res);
             callback(res, html);
         });
 }
 
 Sqlite.prototype.getMeta = function(database_name, table_name, callback){
+    var tableify = require('tableify');
+    var knex = require('knex')({
+        client: 'sqlite3',
+        connection: {
+            filename: "./"+database_name+".sqlite"
+        },
+        useNullAsDefault: true
+    });
+    knex.schema.raw("PRAGMA table_info("+table_name+")")
+    .then((res) => {
+        var html = tableify(res);
+        callback(res, html);
+    });
 }
-Sqlite.prototype.constructView = function(){
+Sqlite.prototype.constructView = function(database_name, table_name, attributes, where, orderBy, callback){
+    var tableify = require('tableify');
+    var knex = require('knex')({
+        client: 'sqlite3',
+        connection: {
+            filename: "./"+database_name+".sqlite"
+        },
+        useNullAsDefault: true
+    });
+    knex(table_name).select(attributes)
+    .where(where).orderBy(orderBy.columns, orderBy.mode)
+    .then((res) => {
+        var html = tableify(res);
+        callback(res, html);
+    });
+}
 
-}
-Sqlite.prototype.meta = function(){
-
-}
-Sqlite.prototype.constructMetaView = function(){
-
-}
 module.exports = Sqlite;
