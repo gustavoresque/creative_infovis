@@ -5,10 +5,12 @@
  */
 
 
-var AppSocket = function () {
+var AppSocket = function (port) {
     
     var myappsocket = this;
-    var socket = new WebSocket("ws://" + (location.host.split(":")[0]) + ":6661");
+    
+    var _port = port || 6661;
+    var socket = new WebSocket("ws://" + (location.host.split(":")[0]) + ":"+_port);
 
     myappsocket.status = {
         open: false
@@ -50,13 +52,13 @@ AppSocket.prototype.send = function (act, msg) {
     this.socket.send(JSON.stringify({act: act, msg: msg}));
 };
 
-AppSocket.prototype.on = function(eventName, callback_func){
-    this.callbacks[eventName] = callback_func;
+AppSocket.prototype.on = function(act, callback){
+    this.callbacks[act] = callback;
 };
 
 
 var mysocket = new AppSocket();
-console.log(mysocket);
+
 mysocket.on("open", function(){
     console.log("deu certo");
     mysocket.send("tools", "olá")

@@ -4,20 +4,14 @@
  * and open the template in the editor.
  */
 
-/**
- * Verifica se uma string termina com outra string
- * @param {type} suffix
- * @returns {Boolean}
- */
-String.prototype.endsWith = function (suffix) {
-    return this.indexOf(suffix, this.length - suffix.length) !== -1;
-};
 
-var ServerSocket  = function(){
+var ServerSocket  = function(port){
     var WebSocketServer = require('ws').Server;
     var self = this;
-    self.wss = new WebSocketServer({port: 6661});
-
+    
+    var defaut_port = port || 6661;
+    
+    self.wss = new WebSocketServer({port: defaut_port});
     
     self.callbacks = {};
 
