@@ -9,9 +9,33 @@ and open the template in the editor.
         <title>Creative InfoVis</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="libs/jquery-3.2.1.min.js"></script>
         <script src="communication/websockets.js"></script>
+        <script src="layout/partition_layout.js"></script>
+        
+        <link rel="stylesheet" href="layout/partition_layout.css">
+        <style>
+            #main-area, #main-menu{
+                position: absolute;
+                left: 0px;
+                right: 0px;
+            }
+            #main-menu{
+                height: 35px;
+                top: 0px;
+                border-bottom: 1px solid gray;
+            }
+            #main-area{
+                bottom: 0px;
+                top: 36px;
+            }
+        </style>
     </head>
     <body>
-        <div>TODO write content</div>
+        <div id="main-menu">Menu</div>
+        <div id="main-area">
+            <div class="partition-root"></div>
+        </div>
+        
     </body>
 </html>

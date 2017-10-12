@@ -1,0 +1,55 @@
+/* 
+    Created on : 07/10/2017, 22:14:22
+    Author     : Gustavo
+*/
+
+div[class^="partition"]{
+    user-select: none;
+    overflow: hidden;
+}
+
+.partition-root{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+}
+
+.partition-node{
+    position: absolute;
+}
+
+.partition-line{
+    position: absolute;
+    background-color: mintcream;
+}
+
+.partition-line.partition-ori-left{
+    width: 10px;
+    left: 0px;
+    height: 100%;
+    cursor: e-resize;
+}
+.partition-line.partition-ori-right{
+    width: 10px;
+    right: 0px;
+    height: 100%;
+    cursor: e-resize;
+}
+.partition-line.partition-ori-top{
+    width: 100%;
+    top: 0px;
+    height: 10px;
+    cursor: n-resize;
+}
+.partition-line.partition-ori-bottom{
+    width: 100%;
+    bottom: 0px;
+    height: 10px;
+    cursor: n-resize;
+}
+
+.partition-highlight-line{
+    background-color: gainsboro;
+}
