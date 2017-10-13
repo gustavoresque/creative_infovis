@@ -9,27 +9,27 @@ var table_name = 'hearthstone';
 
 
 
-/* Debug tables()
+// Debug tables()
 base.tables((data, html) => {
     console.log(data);
     console.log(html);
     output(html);
 });
+//*/
 
 
 
 
-*/
 /* Debug meta(table_name, callback(data, html))
 base.meta(table_name, (data, html) => {
-    console.log(html);
+    //console.log(html);
     output(html);
 });
-*/
+//*/
 
 
 
-//Debug constructView(table_name, attributes, where, orderBy, callback(data, html, view))
+/* Debug constructView(table_name, attributes, where, orderBy, callback(data, html, view))
 attributes = ['name', 'cardClass', 'type', 'set', 'rarity'];
 where = {
     'rarity': 'LEGENDARY',
@@ -39,8 +39,8 @@ orderBy = {columns:['set', 'name'], mode:'ASC'}; //Mode ASC DESC
 
 base.constructView(table_name, attributes, where, orderBy, (data, html) =>{
     output(html)
-    console.log(data);
     console.log(html);
+    console.log(data);
 });
 //*/
 
