@@ -18,7 +18,7 @@ Sqlite.prototype.getTables = function(database_name, callback){
     knex('sqlite_master').where({
         'type': 'table'
     })
-        .select('name')
+        .select()
         .then((res) => {
             var html = tableify(res);
             callback(res, html);
