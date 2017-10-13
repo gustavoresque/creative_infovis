@@ -1,37 +1,52 @@
-var Sqlite = require('./Sqlite');
-var sqliteconn = new Sqlite();
 var fs = require('fs');
+var Sqlite = require('./Sqlite');
+var database_name = 'sample'
 
-/* Debug getTables
-base_name = 'sample';
-sqliteconn.getTables(base_name, (data, html) => {
+var base = new Sqlite(database_name);
+
+
+var table_name = 'hearthstone';
+
+
+
+/* Debug tables()
+base.tables((data, html) => {
     console.log(data);
     console.log(html);
     output(html);
 });
+
+
+
+
 */
-/* Debug getMeta
-base_name = 'sample';
-table_name = 'hearthstone';
-sqliteconn.getMeta(base_name, table_name, (data, html) => {
+/* Debug meta(table_name, callback(data, html))
+base.meta(table_name, (data, html) => {
     console.log(html);
     output(html);
 });
 */
-//Debug constructView
-base_name = 'sample';
-table_name = 'hearthstone';
+
+
+
+//Debug constructView(table_name, attributes, where, orderBy, callback(data, html, view))
 attributes = ['name', 'cardClass', 'type', 'set', 'rarity'];
 where = {
     'rarity': 'LEGENDARY',
     'cardClass': 'PRIEST'
 };
 orderBy = {columns:['set', 'name'], mode:'ASC'}; //Mode ASC DESC
-sqliteconn.constructView(base_name, table_name, attributes, where, orderBy, (data, html) =>{
+
+base.constructView(table_name, attributes, where, orderBy, (data, html) =>{
+    output(html)
     console.log(data);
     console.log(html);
-    output(html);
 });
+//*/
+
+
+
+
 //OUTPUT
 function output(html){
     var string = `
