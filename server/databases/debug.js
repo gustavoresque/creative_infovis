@@ -9,7 +9,7 @@ var table_name = 'hearthstone';
 
 
 
-// Debug tables()
+/* Debug tables()
 base.tables((data, html) => {
     console.log(data);
     console.log(html);
@@ -29,7 +29,7 @@ base.meta(table_name, (data, html) => {
 
 
 
-/* Debug constructView(table_name, attributes, where, orderBy, callback(data, html, view))
+// Debug constructView(table_name, attributes, where, orderBy, callback(data, html, view))
 attributes = ['name', 'cardClass', 'type', 'set', 'rarity'];
 where = {
     'rarity': 'LEGENDARY',
