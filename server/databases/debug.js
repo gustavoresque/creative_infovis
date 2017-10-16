@@ -30,14 +30,31 @@ base.meta(table_name, (data, html) => {
 
 
 // Debug constructView(table_name, attributes, where, orderBy, callback(data, html, view))
-attributes = ['name', 'cardClass', 'type', 'set', 'rarity'];
-where = {
-    'rarity': 'LEGENDARY',
-    'cardClass': 'PRIEST'
-};
-orderBy = {columns:['set', 'name'], mode:'ASC'}; //Mode ASC DESC
+config1 = {
+    columns: ['name', 'cardClass', 'type'],
+    filters: [['rarity', '=', 'LEGENDARY'], ['cardClass', '=', 'PRIEST']],
+    order: {
+        columns: ['type', 'name'],
+        mode: ['ASC', 'DESC']
+    }
+}
 
-base.constructView(table_name, attributes, where, orderBy, (data, html) =>{
+config2 = {
+    columns: ['name', 'artist', 'text'],
+    filters: [['rarity', '=', 'RARE'], ['cardClass', '=', 'WARLOCK']],
+    order: {
+        columns: [],
+        mode: []
+    }
+}
+
+var view  = base.select(table_name, config1);
+var view2  = base.select(table_name, config2);
+Promise.all([view, view2]).then( (results) => {
+  console.log(results[0]);
+  console.log(results[1]);
+});
+/*view.then((data, html) =>{
     output(html)
     console.log(html);
     console.log(data);
@@ -52,13 +69,13 @@ function output(html){
     var string = `
     <!DOCTYPE html>
     <html>
-    
+
     <body>
     ${html}
     </body>
-    
+
     </html>
-    
+
     `
 
 

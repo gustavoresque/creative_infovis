@@ -35,7 +35,7 @@ class Sqlite {
 
 
     tables(callback) {
-        var self = this;
+        var me = this;
         var arr = this.knex('sqlite_master').where({
             'type': 'table'
         })
@@ -50,11 +50,11 @@ class Sqlite {
             console.log(res);
             var aux_arr = [];
             res.forEach(function(val_i){
-                self.getColumnsCount(val_i.Nome,function(count){
+                me.getColumnsCount(val_i.Nome,function(count){
                     aux_arr.push(0);
                     val_i.Colunas = count;
                     if(aux_arr.length === res.length){
-                        private_entryCount(res, self, callback);
+                        _entryCount(res, me, callback);
                     }
                 });
             })
@@ -63,7 +63,6 @@ class Sqlite {
         return this;
     }
 
-    
 
     // meta() RETORNA o JSON com os metadados de uma data tabela, e passa para o CALLBACK
     /* as colunas de meta são:
@@ -77,7 +76,7 @@ class Sqlite {
             'Valor Maximo': null,
             'Valor Minimo': null,
             'Moda': null
-            
+
         }})
         .then((res) => {
             var html = this.tableify(res);
@@ -85,26 +84,32 @@ class Sqlite {
         });
         return this;
     }
-    // constructView() passa o JSON com a view de uma dada nome_tabela+parametros para o CALLBACK
-    constructView(table_name, attributes, where, orderBy, callback){
-        var query = this.knex(table_name).select(attributes).where(where);
-        if (orderBy.mode){
-            var view = query.orderBy(orderBy.columns, orderBy.mode);
-            view.then((res) => {
-                var html = this.tableify(res);
-                callback(res, html);
-            });
-        }
-        else {
-            var view = query;
-            view.then((res) => {
-                var html = this.tableify(res);
-                callback(res, html);
-            });
-        }
-        return this;
-    }
-    
+
+
+    // select() passa o JSON com a view de uma dada nome_tabela+parametros para o CALLBACK
+    select(tbl_name, config){
+      let me = this;
+      return new Promise(function(resolve, reject) {
+        //Inicia a query
+        let query = me.knex(tbl_name).select(config.columns);
+
+        // Adiciona os filtros WHERE
+        config.filters.forEach( (filter) => {
+          query = query.clone().where(filter[0], filter[1], filter[2]);
+        });
+
+        // Adiciona ordenação ORDERBY
+        config.order.columns.forEach( (column, i) => {
+          query = query.clone().orderBy(column, config.order.mode[i]);
+        });
+
+        // Resolve a query
+        resolve(query);
+
+      });
+    };
+
+
 
 }
 
@@ -117,14 +122,14 @@ module.exports = Sqlite;
 
 
 
-function private_entryCount(res, self, callback){
+function _entryCount(res, me, callback){
     var aux_arr = [];
     res.forEach(function(val_i){
-        self.getEntryCount(val_i.Nome,function(count){
+        me.getEntryCount(val_i.Nome,function(count){
             aux_arr.push(0);
             val_i.Entradas = count;
             if(aux_arr.length === res.length){
-                callback(res, self.tableify(res));
+                callback(res, me.tableify(res));
             }
         });
     })
