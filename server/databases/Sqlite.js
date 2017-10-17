@@ -17,44 +17,28 @@ class Sqlite {
     /* as colunas de tables são:
         nome | Ncolunas | Nentidades
     */
-    getColumnsCount(tbl_name, callback){
-        this.knex.schema.raw("PRAGMA table_info("+tbl_name+")").then(function(res){
-            console.log('\n\n\nOOOOOWOWWWWW\n\n\n');
-            console.log(res.length);
-            callback(res.length);
-        });
-    }
-
-    getEntryCount(tbl_name, callback){
-        this.knex(tbl_name).select().count().then(function(res){
-            console.log('\n\n\nYAYAYAYAYAYAYAYAYAY\n\n\n');
-            console.log(res[0]['count(*)']);
-            callback(res[0]['count(*)']);
-        })
-    }
-
 
     tables(callback) {
         var me = this;
-        var arr = this.knex('sqlite_master').where({
+        this.knex('sqlite_master').where({
             'type': 'table'
         })
         .select('name')
         .map((row)=>{return {
             'Nome': row.name,
-            'Colunas': 0,
-            'Entradas': 0
+            'Colunas': null,
+            'Entradas': null
         }})
         .then((res) => {
-            var html = this.tableify(res);
+            var html = me.tableify(res);
             console.log(res);
             var aux_arr = [];
             res.forEach(function(val_i){
-                me.getColumnsCount(val_i.Nome,function(count){
+                _getColumnsCount(val_i.Nome, me ,function(count){
                     aux_arr.push(0);
                     val_i.Colunas = count;
                     if(aux_arr.length === res.length){
-                        _entryCount(res, me, callback);
+                        _insertCount(res, me, callback);
                     }
                 });
             })
@@ -65,9 +49,6 @@ class Sqlite {
 
 
     // meta() RETORNA o JSON com os metadados de uma data tabela, e passa para o CALLBACK
-    /* as colunas de meta são:
-        coluna | tipo | nulo | prikey | defaultValue | Min | Max | Moda
-             */
     meta(table_name, callback){
         this.knex.schema.raw("PRAGMA table_info("+table_name+")")
         .map((row)=>{return {
@@ -90,7 +71,7 @@ class Sqlite {
     select(tbl_name, config){
       let me = this;
       return new Promise(function(resolve, reject) {
-        //Inicia a query
+        // Inicia a query
         let query = me.knex(tbl_name).select(config.columns);
 
         // Adiciona os filtros WHERE
@@ -116,21 +97,32 @@ class Sqlite {
 
 module.exports = Sqlite;
 
-
-
-
-
-
-
-function _entryCount(res, me, callback){
+// Private functions
+function _insertCount(res, me, callback){
     var aux_arr = [];
     res.forEach(function(val_i){
-        me.getEntryCount(val_i.Nome,function(count){
+        _getEntryCount(val_i.Nome, me ,function(count){
             aux_arr.push(0);
             val_i.Entradas = count;
             if(aux_arr.length === res.length){
                 callback(res, me.tableify(res));
             }
         });
+    })
+}
+
+function _getColumnsCount(tbl_name, me ,callback){
+    me.knex.schema.raw("PRAGMA table_info("+tbl_name+")").then(function(res){
+        console.log('\n\n\nOOOOOWOWWWWW\n\n\n');
+        console.log(res.length);
+        callback(res.length);
+    });
+}
+
+function _getEntryCount(tbl_name, me ,callback){
+    me.knex(tbl_name).select().count().then(function(res){
+        console.log('\n\n\nYAYAYAYAYAYAYAYAYAY\n\n\n');
+        console.log(res[0]['count(*)']);
+        callback(res[0]['count(*)']);
     })
 }
