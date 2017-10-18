@@ -18,33 +18,31 @@ class Sqlite {
         nome | Ncolunas | Nentidades
     */
 
-    tables(callback) {
-        var me = this;
-        this.knex('sqlite_master').where({
-            'type': 'table'
-        })
-        .select('name')
-        .map((row)=>{return {
-            'Nome': row.name,
-            'Colunas': null,
-            'Entradas': null
-        }})
-        .then((res) => {
-            var html = me.tableify(res);
-            console.log(res);
-            var aux_arr = [];
-            res.forEach(function(val_i){
-                _getColumnsCount(val_i.Nome, me ,function(count){
-                    aux_arr.push(0);
-                    val_i.Colunas = count;
-                    if(aux_arr.length === res.length){
-                        _insertCount(res, me, callback);
-                    }
-                });
-            })
+    get tables() {
+        let me = this;
 
-        });
-        return this;
+
+          return new Promise( (resolve, reject) => {
+            this.knex('sqlite_master').where({
+                'type': 'table'
+            })
+            .select('name')
+            .map( (row)=>{return {
+                'Nome': row.name,
+                'Colunas': null,
+                'Entradas': null
+            }})
+            .then( (result) => {
+                let columnCount = _getColumnsCount.call(me, result);
+                let entryCount = _getEntryCount.call(me, result);
+                Promise.all([columnCount, entryCount])
+                .then( (values) => {
+                  resolve(_insertCount(result, values));
+                });
+            });
+          });
+
+
     }
 
 
@@ -70,7 +68,7 @@ class Sqlite {
     // select() passa o JSON com a view de uma dada nome_tabela+parametros para o CALLBACK
     select(tbl_name, config){
       let me = this;
-      return new Promise(function(resolve, reject) {
+      return new Promise( (resolve, reject) => {
         // Inicia a query
         let query = me.knex(tbl_name).select(config.columns);
 
@@ -91,38 +89,44 @@ class Sqlite {
     };
 
 
-
 }
 
 
 module.exports = Sqlite;
 
 // Private functions
-function _insertCount(res, me, callback){
-    var aux_arr = [];
-    res.forEach(function(val_i){
-        _getEntryCount(val_i.Nome, me ,function(count){
-            aux_arr.push(0);
-            val_i.Entradas = count;
-            if(aux_arr.length === res.length){
-                callback(res, me.tableify(res));
-            }
-        });
-    })
+function _insertCount(result, values){
+  let columnCount = values[0];
+  let entryCount = values[1];
+  result.forEach(function(val_i, index){
+    val_i.Colunas = columnCount[index];
+    val_i.Entradas = columnCount[index];
+  });
+  return result;
+
 }
 
-function _getColumnsCount(tbl_name, me ,callback){
-    me.knex.schema.raw("PRAGMA table_info("+tbl_name+")").then(function(res){
-        console.log('\n\n\nOOOOOWOWWWWW\n\n\n');
-        console.log(res.length);
-        callback(res.length);
+function _getColumnsCount(result){
+  return new Promise( (resolve, reject) => {
+    let columnCount = []
+    result.forEach( (val_i) => {
+      this.knex.schema.raw("PRAGMA table_info("+val_i.Nome+")").then(function(pragma){
+        columnCount.push(pragma.length);
+        if (columnCount.length === result.length) resolve(columnCount);
+      });
     });
+  });
 }
 
-function _getEntryCount(tbl_name, me ,callback){
-    me.knex(tbl_name).select().count().then(function(res){
-        console.log('\n\n\nYAYAYAYAYAYAYAYAYAY\n\n\n');
-        console.log(res[0]['count(*)']);
-        callback(res[0]['count(*)']);
-    })
+function _getEntryCount(result){
+  return new Promise( (resolve, reject) => {
+    let entryCount = [];
+    result.forEach( (val_i) => {
+      this.knex(val_i.Nome).select().count().then(function(res){
+          entryCount.push((res[0]['count(*)']));
+          if (entryCount.length === result.length) resolve(entryCount);
+      });
+    });
+
+  });
 }

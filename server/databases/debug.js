@@ -1,13 +1,12 @@
-var fs = require('fs');
-var Sqlite = require('./Sqlite');
-var database_name = 'sample'
+const fs = require('fs');
+const Sqlite = require('./Sqlite');
 
-var base = new Sqlite(database_name);
+let database_name = 'sample'
+const base = new Sqlite(database_name);
 
+let table_name = 'hearthstone';
 
-var table_name = 'hearthstone';
-
-config= {
+let args = {
     columns: ['name', 'artist', 'text'],
     filters: [['rarity', '=', 'RARE'], ['cardClass', '=', 'WARLOCK']],
     order: {
@@ -16,13 +15,14 @@ config= {
     }
 }
 
-var view  = base.select(table_name, config);
+let view  = base.select(table_name, args);
 
-base.tables( (res, html) => {
-  console.log(res);
-})
-
-
+let tables = base.tables
+console.log('async 1');
+tables.then( (list) => {console.log('acessando aqui opa', list);});
+console.log('async 2');
+tables.then( (list) => {console.log('acessando dnv aqui', list);});
+console.log('async 3');
 //OUTPUT
 function output(html){
     var string = `
