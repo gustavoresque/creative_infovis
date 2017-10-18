@@ -34,8 +34,8 @@ class Sqlite {
             }})
             .then( (result) => {
                 let columnCount = _getColumnsCount.call(me, result);
-                let entryCount = _getEntryCount.call(me, result);
-                Promise.all([columnCount, entryCount])
+                let LineCount = _getLineCount.call(me, result);
+                Promise.all([columnCount, LineCount])
                 .then( (values) => {
                   resolve(_insertCount(result, values));
                 });
@@ -48,56 +48,57 @@ class Sqlite {
 
     // meta() RETORNA o JSON com os metadados de uma data tabela, e passa para o CALLBACK
     meta(table_name, callback){
+      return new Promise((resolve, reject) => {
         this.knex.schema.raw("PRAGMA table_info("+table_name+")")
         .map((row)=>{return {
             'Name': row.name,
             'Type': row.type,
-            'Valor Maximo': null,
-            'Valor Minimo': null,
+            'Minimum': null,
+            'Maximum': null,
             'Moda': null
 
         }})
         .then((res) => {
-            var html = this.tableify(res);
-            if (callback) callback(res, html);
+            resolve(res);
         });
-        return this;
+      });
     }
 
 
     // select() passa o JSON com a view de uma dada nome_tabela+parametros para o CALLBACK
-    select(tbl_name, config){
+    select(tbl_name, args){
       let me = this;
       return new Promise( (resolve, reject) => {
         // Inicia a query
-        let query = me.knex(tbl_name).select(config.columns);
-
+        me.knex(tbl_name).select(args.columns)
         // Adiciona os filtros WHERE
-        config.filters.forEach( (filter) => {
-          query = query.clone().where(filter[0], filter[1], filter[2]);
-        });
-
+        .modify( (queryBuilder) => {
+          args.filters.forEach( (filter) => {
+            queryBuilder.where(filter[0], filter[1], filter[2]);
+          });
+        })
         // Adiciona ordenação ORDERBY
-        config.order.columns.forEach( (column, i) => {
-          query = query.clone().orderBy(column, config.order.mode[i]);
-        });
-
+        .modify( (queryBuilder) => {
+          args.order.columns.forEach( (column, i) => {
+            queryBuilder.orderBy(column, args.order.mode[i]);
+          });
+        })
         // Resolve a query
-        resolve(query);
-
+        .then( (result) => {
+          resolve(result);
+        });
       });
     };
 
 
 }
 
-
 module.exports = Sqlite;
 
 // Private functions
 function _insertCount(result, values){
   let columnCount = values[0];
-  let entryCount = values[1];
+  let LineCount = values[1];
   result.forEach(function(val_i, index){
     val_i.Colunas = columnCount[index];
     val_i.Entradas = columnCount[index];
@@ -118,13 +119,13 @@ function _getColumnsCount(result){
   });
 }
 
-function _getEntryCount(result){
+function _getLineCount(result){
   return new Promise( (resolve, reject) => {
-    let entryCount = [];
+    let LineCount = [];
     result.forEach( (val_i) => {
       this.knex(val_i.Nome).select().count().then(function(res){
-          entryCount.push((res[0]['count(*)']));
-          if (entryCount.length === result.length) resolve(entryCount);
+          LineCount.push((res[0]['count(*)']));
+          if (LineCount.length === result.length) resolve(LineCount);
       });
     });
 

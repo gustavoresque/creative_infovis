@@ -1,10 +1,10 @@
 const fs = require('fs');
 const Sqlite = require('./Sqlite');
-
+const tableify = require('tableify');
 let database_name = 'sample'
 const base = new Sqlite(database_name);
 
-let table_name = 'hearthstone';
+let tbl_name = 'hearthstone';
 
 let args = {
     columns: ['name', 'artist', 'text'],
@@ -14,15 +14,9 @@ let args = {
         mode: []
     }
 }
-
-let view  = base.select(table_name, args);
-
-let tables = base.tables
-console.log('async 1');
-tables.then( (list) => {console.log('acessando aqui opa', list);});
-console.log('async 2');
-tables.then( (list) => {console.log('acessando dnv aqui', list);});
-console.log('async 3');
+let tables = base.tables;
+let view  = base.select(tbl_name, args).then( (view) => { output(tableify(view)); });
+let meta = base.meta(tbl_name);
 //OUTPUT
 function output(html){
     var string = `
