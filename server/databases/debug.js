@@ -1,4 +1,5 @@
 const fs = require('fs');
+const math = require('mathjs');
 const tableify = require('tableify');
 const Sqlite = require('./Sqlite');
 let database_name = 'sample'
@@ -25,7 +26,10 @@ let args2 = {
 }
 //let tables = base.tables.then( (list) => {output(tableify(list));});
 let view  = base.select(tbl_name2, args2);
-let meta = base.meta(tbl_name2).then( (meta) => {console.log(meta); output(tableify(meta))});
+let meta = base.meta(tbl_name2).then( (meta) => {
+  output(tableify(meta))
+});
+
 //OUTPUT
 function output(html){
     var string = `
