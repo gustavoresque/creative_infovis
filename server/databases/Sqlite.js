@@ -58,7 +58,9 @@ class Sqlite {
             'Type': row.type,
             'Minimum': null,
             'Maximum': null,
-            'Mean': null
+            'Mean': null,
+            'Std': null,
+            'Distribution': null
 
         }})
         .then((meta_list) => {
@@ -66,6 +68,8 @@ class Sqlite {
             promises.push(_getMax.call(me, table_name));
             promises.push(_getMin.call(me, table_name));
             promises.push(_getMean.call(me, table_name));
+            promises.push(_getSTD.call(me, table_name));
+            promises.push(_getDistributionType.call(me, table_name));
 
             let ready = Promise.all(promises);
             ready.then( (values) => {
@@ -108,9 +112,9 @@ module.exports = Sqlite;
 
           // XXX: Private functions
 
-// NOTE: rotina para filtragem de arrays
-var _filt = (array)=>{
-  return array.filter( (n) => {
+// NOTE: rotina para filtragem de arrays e obtenção de numeros
+var _filt = (a)=>{
+  return a.filter( (n) => {
     return !(n===null) && _isNumeric(n);
   })
 }
@@ -120,8 +124,19 @@ var _isNumeric = (n)=>{
   return (n - 0) == n && (''+n).trim().length > 0;
 }
 
+// NOTE: rotina para checar se um array contem somente inteiros
+var _hasOnlyInts = (a) => { [2,3]
+  let isInt = (n) => {
+    return (n % 1) === 0;
+  }
+  let notInts = a.filter( (n)=>{
+    return !isInt(n);
+  });
+  return !Boolean(notInts.length);
+}
 
-        // XXX: Inserts
+
+      // XXX: Inserts
 
 
 
@@ -141,12 +156,16 @@ function _insertMeta(meta_list, values){
   let max = values[0];
   let min = values[1];
   let mean = values[2];
+  let std = values[3];
+  let distribution = values[4];
   // let meta = values[i]...
   meta_list.forEach( (attr_obj, index) => {
     debugger;
     attr_obj.Maximum = max[index];
     attr_obj.Minimum = min[index];
     attr_obj.Mean = mean[index];
+    attr_obj.Std = std[index];
+    attr_obj.Distribution = distribution[index];
     //attr_obj.Meta = meta[index]...
   });
   return meta_list;
@@ -249,3 +268,40 @@ function _getMean(tbl_name){
     });
   });
 }
+
+// NOTE: função que obtem os valores de desvio padrão de cada coluna da tabela
+function _getSTD(tbl_name){
+  return new Promise((resolve, reject) => {
+    let stdValues = [];
+    _getAttributes.call(this, tbl_name).then( (attributes) =>{
+      attributes.forEach( (attr) => {
+        this.knex(tbl_name).pluck(attr).then( (array) => {
+          let filtered = _filt(array);
+          if (filtered.length === 0) stdValues.push(NaN);
+          else stdValues.push(math.round(math.std(filtered),2));
+          if (stdValues.length === attributes.length) resolve(stdValues)
+        });
+      });
+    });
+  });
+}
+
+// NOTE:
+function _getDistributionType(tbl_name){
+  return new Promise((resolve, reject) => {
+    let distributionTypes = [];
+    _getAttributes.call(this, tbl_name).then( (attributes) => {
+      attributes.forEach( (attr) => {
+        this.knex(tbl_name).pluck(attr).groupBy(attr)
+        .then( (uniques) => {
+          if (uniques[0] === null || uniques[0] === '') uniques.shift();
+          if (uniques.length === 0) distributionTypes.push('ALL NULL');
+          else if (uniques.length < 20) distributionTypes.push('CATEGORICAL('+uniques.length+')');
+          else if (_hasOnlyInts(uniques)) distributionTypes.push('DISCRETE');
+          else distributionTypes.push('CONTINUOUS');
+          if (distributionTypes.length === attributes.length) resolve(distributionTypes);
+        });
+      });
+    });
+  });
+};
