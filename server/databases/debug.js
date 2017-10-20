@@ -23,10 +23,9 @@ let args2 = {
     mode: []
   }
 }
-
-let tables = base.tables;
+//let tables = base.tables.then( (list) => {output(tableify(list));});
 let view  = base.select(tbl_name2, args2);
-let meta = base.meta(tbl_name2).then( (meta) => {output(tableify(meta))});
+let meta = base.meta(tbl_name2).then( (meta) => {console.log(meta); output(tableify(meta))});
 //OUTPUT
 function output(html){
     var string = `

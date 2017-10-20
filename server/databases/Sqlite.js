@@ -18,6 +18,7 @@ class Sqlite {
         nome | Ncolunas | Nentidades
     */
 
+
     get tables() {
         let me = this;
 
@@ -56,15 +57,13 @@ class Sqlite {
             'Name': row.name,
             'Type': row.type,
             'Minimum': null,
-            'Maximum': null,
-            'Mode': null
+            'Maximum': null
 
         }})
         .then((meta_list) => {
             let maxValues = _getMaximum.call(me, table_name);
             let minValues = _getMinimum.call(me, table_name);
-            let modeValues = _getMode.call(me, table_name);
-            let ready = Promise.all([maxValues, minValues, modeValues]);
+            let ready = Promise.all([maxValues, minValues]);
             ready.then( (values) => {
               resolve(_insertMeta(meta_list, values));
             });
@@ -117,16 +116,16 @@ function _insertCount(tbl_list, values){
 function _insertMeta(meta_list, values){
   let max = values[0];
   let min = values[1];
-  let mode = values[2];
   // let meta = values[i]...
   meta_list.forEach( (attr_obj, index) => {
+    debugger;
     attr_obj.Maximum = max[index];
     attr_obj.Minimum = min[index];
-    attr_obj.Mode = mode[index];
     //attr_obj.Meta = meta[index]...
   });
   return meta_list;
 }
+
 
 function _getColumnsCount(result){
   return new Promise( (resolve, reject) => {
@@ -153,17 +152,29 @@ function _getLineCount(result){
   });
 }
 
+function _getAttributes(tbl_name){
+  return new Promise((resolve, reject) => {
+    let attributes = [];
+    this.knex.schema.raw("PRAGMA table_info("+tbl_name+")")
+    .then( (pragma) =>{
+      pragma.forEach( (pragmaLine) => {
+        attributes.push(pragmaLine.name);
+        if (attributes.length === pragma.length) resolve(attributes);
+      });
+    });
+  });
+}
+
 function _getMaximum(tbl_name){
   return new Promise((resolve, reject) => {
     let maximumValues = [];
-    this.knex.schema.raw("PRAGMA table_info("+tbl_name+")")
-    .then( (pragma) => {
-      pragma.forEach( (pragmaLine, index) => {
-        this.knex(tbl_name).max(pragmaLine.name).then( (obj) => {
-          let value = obj[0]['max("'+pragmaLine.name+'")']
+    _getAttributes.call(this, tbl_name).then( (attributes) => {
+      attributes.forEach( (attr) => {
+        this.knex(tbl_name).max(attr).then( obj => {
+          let value = obj[0]['max("'+attr+'")']
           if (_isNumeric(value)) maximumValues.push(value);
           else maximumValues.push('NaN');
-          if (maximumValues.length === pragma.length) resolve(maximumValues);
+          if (maximumValues.length === attributes.length) resolve(maximumValues);
         });
       });
     });
@@ -173,49 +184,19 @@ function _getMaximum(tbl_name){
 function _getMinimum(tbl_name){
   return new Promise((resolve, reject) => {
     let minimumValues = [];
-    this.knex.schema.raw("PRAGMA table_info("+tbl_name+")")
-    .then( (pragma) => {
-      pragma.forEach( (pragmaLine, index) => {
-        this.knex(tbl_name).min(pragmaLine.name).then( (obj) => {
-          let value = obj[0]['min("'+pragmaLine.name+'")']
+    _getAttributes.call(this, tbl_name).then( (attributes) => {
+      attributes.forEach( (attr) => {
+        this.knex(tbl_name).min(attr).then( (obj) => {
+          let value = obj[0]['min("'+attr+'")']
           if (_isNumeric(value)) minimumValues.push(value);
           else minimumValues.push('NaN');
-          if (minimumValues.length === pragma.length) resolve(minimumValues);
+          if (minimumValues.length === attributes.length) resolve(minimumValues);
         });
       });
     });
   });
 }
-function _getMode(tbl_name){
-  // função que retorna o modo de um array
-  let mode = (arr) => {
-      return arr.sort((a,b) =>
-            arr.filter(v => v===a).length
-          - arr.filter(v => v===b).length
-      ).pop();
-  }
-  // função que extrai os arrays
-  return new Promise((resolve, reject) => {
-    let modeValues = [];
-    this.knex.schema.raw("PRAGMA table_info("+tbl_name+")")
-    .then( (pragma) => {
-      pragma.forEach( (pragmaLine) => {
-        this.knex(tbl_name).select(pragmaLine.name)
-        .map( (obj) => {
-          return obj[pragmaLine.name];
-        })
-        .then( (array) =>{
-          modeValues.push(mode(array));
-          debugger;
-          if (modeValues.length === pragma.length) resolve(modeValues);
-        })
-      })
-    })
-  })
+
+function _isNumeric(n) {
+  return (n - 0) == n && (''+n).trim().length > 0;
 }
-
-
-
-  function _isNumeric(n) {
-    return (n - 0) == n && (''+n).trim().length > 0;
-  }
