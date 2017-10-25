@@ -30,7 +30,7 @@ var my_database = new Sqlite('my_database');
 <br>
 <br>
 
-<a href="#base.tables" name="base.tables">#</a> base.__table__
+<a href="#base.tables" name="base.tables">#</a> base.__tables__
 
 Método getter para obter a lista de tabelas presentes na base de dados. O retorna uma **Promise** que faz uma requisição à base. Ao completar a requisição, a **Promise** resolve um array de objetos com o nome das tabelas e suas respectivas quantidades de colunas e entradas
 
