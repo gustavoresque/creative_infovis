@@ -14,16 +14,43 @@ let args1 = {
         mode: []
     }
 }
-// ARRUMAR ESSE BANDO DE ARRAY SOLTO 
+// ARRUMAR ESSE BANDO DE ARRAY SOLTO
 let tbl_name2 = 'imaginary_sells';
+
+
+let newArgs2 = {
+  columns: [],
+  filters: [{
+    attribute: 'product_A_sells',
+    operator: '>',
+    value: 900
+  },
+  { attribute: 'product_A_sells',
+    operator: '<',
+    value: 920
+  }
+  ],
+  order: [{
+    column: 'product_A_sells',
+    mode: 'ASC'
+  },
+  {
+    column: 'product_B_sells',
+    mode: 'DESC'
+  }
+],
+}
+
 let args2 = {
   columns: [],
-  filters: [['product_A_sells', '>', '900'], ['product_B_refunds', '>', '400']],
+  filters: [['product_A_sells', '>', '900'], ['product_A_sells', '<', '910']],
   order: {
     columns: [],
     mode: []
   }
 }
+
+
 
 let tbl_name3 = 'imaginary_climate'
 let args3 = {
@@ -41,11 +68,11 @@ let table_list = base.tables.then( (json_list) => {
 
 })
 
-let view  = base.select(tbl_name3, args3).then( (view) => {
-
+let view  = base.select(tbl_name2, newArgs2).then( (view) => {
+  output(tableify(view));
 })
 let meta = base.meta(tbl_name3).then( (meta) => {
-  console.log(meta);
+
 });
 
 //OUTPUT

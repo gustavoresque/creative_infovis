@@ -89,13 +89,13 @@ class Sqlite {
         // Adiciona os filtros WHERE
         .modify( (queryBuilder) => {
           args.filters.forEach( (filter) => {
-            queryBuilder.where(filter[0], filter[1], filter[2]);
+            queryBuilder.where(filter.attribute, filter.operator, filter.value);
           });
         })
         // Adiciona ordenação ORDERBY
         .modify( (queryBuilder) => {
-          args.order.columns.forEach( (column, i) => {
-            queryBuilder.orderBy(column, args.order.mode[i]);
+          args.order.forEach( (order) => {
+            queryBuilder.orderBy(order.column, order.mode);
           });
         })
         // Resolve a query
