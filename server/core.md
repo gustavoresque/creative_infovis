@@ -2,9 +2,9 @@
 
 - Sqlite
   - [__new__ Sqlite(database_name)](#Sqlite)
-  - [base.__tables__](#sqlite.tables)
-  - [base.__meta__(table_name)](#sqlite.meta)
-  - [base.__select__(table_name, args)](#sqlite.select)
+  - [base.__tables__](#base.tables)
+  - [base.__meta__(table_name)](#base.meta)
+  - [base.__select__(table_name, args)](#base.select)
 
 
 ## Sqlite
