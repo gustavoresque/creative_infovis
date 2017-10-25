@@ -14,7 +14,7 @@ let args1 = {
         mode: []
     }
 }
-
+// ARRUMAR ESSE BANDO DE ARRAY SOLTO 
 let tbl_name2 = 'imaginary_sells';
 let args2 = {
   columns: [],
@@ -24,10 +24,28 @@ let args2 = {
     mode: []
   }
 }
+
+let tbl_name3 = 'imaginary_climate'
+let args3 = {
+  columns: [],
+  filters: [],
+  order: {
+    columns: [],
+    mode: []
+  }
+}
+
+
 //let tables = base.tables.then( (list) => {output(tableify(list));});
-let view  = base.select(tbl_name2, args2);
-let meta = base.meta(tbl_name2).then( (meta) => {
-  output(tableify(meta))
+let table_list = base.tables.then( (json_list) => {
+
+})
+
+let view  = base.select(tbl_name3, args3).then( (view) => {
+
+})
+let meta = base.meta(tbl_name3).then( (meta) => {
+  console.log(meta);
 });
 
 //OUTPUT
