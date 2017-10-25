@@ -30,6 +30,15 @@ and open the template in the editor.
                 top: 36px;
             }
         </style>
+
+        <script>
+            $(document).ready(function(){
+                let partition = new PartitionLayout();
+                partition.onselectednode = function(a,b){
+                    console.log(a,b);
+                };
+            });
+        </script>
     </head>
     <body>
         <div id="main-menu">Menu</div>

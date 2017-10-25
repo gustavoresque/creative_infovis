@@ -42,7 +42,7 @@ var WebService = function (url, method, headers, callback) {
 WebService.prototype.send = function (callback) {
     var self = this;
     
-    console.log(self);
+
     var options = {
         hostname: self.host,
         port: self.port,
