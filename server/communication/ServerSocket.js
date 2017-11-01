@@ -9,9 +9,9 @@ var ServerSocket  = function(port){
     var WebSocketServer = require('ws').Server;
     var self = this;
     
-    var defaut_port = port || 6661;
+    var default_port = port || 6661;
     
-    self.wss = new WebSocketServer({port: defaut_port});
+    self.wss = new WebSocketServer({port: default_port});
     
     self.callbacks = {};
 
@@ -20,7 +20,7 @@ var ServerSocket  = function(port){
 
         socket.on('message', function (message, flags) {
             
-            if (!flags.binary) {
+            if (flags && !flags.binary) {
                 var objMsg = JSON.parse(message);
                 if (self.callbacks[objMsg.act])
                     self.callbacks[objMsg.act](socket, objMsg.msg);
