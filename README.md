@@ -5,7 +5,8 @@
 
 Módulos:
 - [core](https://github.com/gustavoresque/creative_infovis/blob/master/README.md)
-- [communication](https://github.com/gustavoresque/creative_infovis/blob/master/docs/server/communication.md)
+- [communication](https://github.com/gustavoresque/creative_infovis/blob/master/docs/client/communication.md)
+- [layout](https://github.com/gustavoresque/creative_infovis/blob/master/docs/client/layout.md)
 
 
 

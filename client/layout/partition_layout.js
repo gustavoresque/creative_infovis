@@ -160,7 +160,7 @@ let setupFunction = function () {
 
     $(window).mouseup(function(e){
 
-        console.log(nodes);
+
         if(target_border){
             $partition_root.get(0).onmousemove = null;
             target.children(".partition-divisor").remove();
