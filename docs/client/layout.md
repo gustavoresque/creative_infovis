@@ -27,8 +27,11 @@ A seguir os dois exemplos de código criando o layout de partição das duas for
 Forma 1:
 ```javascript
 //main.js
-var rootnode = document.getElementById("root");
-var partition = new PartitionLayout(rootnode);
+$(document).ready(function(){
+    var rootnode = document.getElementById("root");
+    var partition = new PartitionLayout(rootnode);
+});
+
 
 ```
 
@@ -40,6 +43,7 @@ var partition = new PartitionLayout(rootnode);
         <title>Title</title>
         <script src="libs/jquery-3.2.1.min.js"></script>
         <script src="layout/partition_layout.js"></script>
+        <script src="main.js"></script>
         
         <link rel="stylesheet" href="layout/partition_layout.css">
         <!-- É importante que o root tenha tamanho -->
@@ -75,7 +79,8 @@ var partition = new PartitionLayout(rootnode);
 
 Forma 2:
 ```javascript
- $(document).ready(function(){
+//main.js
+$(document).ready(function(){
      let partition = new PartitionLayout();
      partition.onselectednode = function(a,b){
          console.log(a,b);
@@ -92,6 +97,7 @@ Forma 2:
         <title>Title</title>
         <script src="libs/jquery-3.2.1.min.js"></script>
         <script src="layout/partition_layout.js"></script>
+        <script src="main.js"></script>
         
         <link rel="stylesheet" href="layout/partition_layout.css">
         <style>
@@ -129,13 +135,12 @@ Forma 2:
 
 <a href="#partition.addNode" name="partition.addNode">#</a> partition.__addNode__(node)
 
-Status do socket.
+![code|notworking](https://img.shields.io/badge/code-notworking-red.svg)
 
-Tipo:
-- **object**
+Adiciona um node via javascript na tela do usuário.
 
-Atributos:
-- **boolean** `appSocket.status.open` - indica se o socket está aberto `true` ou fechado `false`.
+Parâmetros:
+- **object** `node` - um novo objeto de node a ser adicionado na hierarquia de partição.
 
 
 <br>
@@ -143,11 +148,12 @@ Atributos:
 
 <a href="#partition.removeNode" name="partition.removeNode">#</a> partition.__removeNode__(node)
 
-Envia uma mensagem `msg` para o servidor com um determinado propósito `act`.
+![code|notworking](https://img.shields.io/badge/code-notworking-red.svg)
+
+Remove um node da hierarquia via javascript.
 
 Parâmetros:
-- **string** `act` - Propósito da mensagem, será utilizado para direcionar a mensagem.
-- **object** `msg` - Mensagem propriamente dita, pode ser uma string ou um objeto.
+- **object** `node` - um nó pertencente a hierarquia de partição que será removido.
 
 
 
@@ -156,14 +162,23 @@ Parâmetros:
 
 <a href="#partition.onselectednode" name="partition.onselectednode">#</a> partition.__onselectednode__
 
-Registra uma função `callback` para receber mensagens com um propósito `act`. Utilizado para receber mensagens do servidor.
+O objeto chama essa função toda vez que o usuário seleciona um nó diferente.
+
+Tipo:
+- **function**
 
 Parâmetros:
-- **string** `act` - Propósito da mensagem, será utilizado para direcionar a mensagem.
-- **function** `callback` - Função que será chamada quando uma mensagem com o propósito especificado for recebida. O parâmetro enviado para a função é o seguinte:
-  - **object** `msg` - Mensagem enviada pelo servidor.
+- **object** `node` - Nó selecionado.
+- **object** `html_node` - DOM html associado ao nó selecionado.
 
+Exemplo:
+```javascript
 
+partition.onselectednode = (node, html_node) => {
+    //Essa função será executada toda vez que um nó diferente for selecionado pelo usuário.
+    console.log(node);
+}
+```
 
 
 <br>
@@ -171,12 +186,24 @@ Parâmetros:
 
 <a href="#partition.onnodecreated" name="partition.onnodecreated">#</a> partition.__onnodecreated__
 
-Registra uma função `callback` para receber mensagens com um propósito `act`. Utilizado para receber mensagens do servidor.
+O objeto chama essa função toda vez que um novo nó é criado.
+
+Tipo:
+- **function**
 
 Parâmetros:
-- **string** `act` - Propósito da mensagem, será utilizado para direcionar a mensagem.
-- **function** `callback` - Função que será chamada quando uma mensagem com o propósito especificado for recebida. O parâmetro enviado para a função é o seguinte:
-  - **object** `msg` - Mensagem enviada pelo servidor.
+- **object** `node` - Nó criado.
+- **object** `html_node` - DOM html associado ao nó criado.
+
+Exemplo:
+```javascript
+
+partition.onnodecreated = (node, html_node) => {
+    //Essa função será executada toda vez que um nó for criado.
+    console.log(node);
+}
+```
+
   
   
   
@@ -185,12 +212,23 @@ Parâmetros:
 
 <a href="#partition.onnoderesized" name="partition.onnoderesized">#</a> partition.__onnoderesized__
 
-Registra uma função `callback` para receber mensagens com um propósito `act`. Utilizado para receber mensagens do servidor.
+O objeto chama essa função toda vez que um novo é redimensionado pelo usuário. Pode ser utilizado para atualizar o tamanho do conteúdo interno caso esse não se atualize automaticamente.
+
+Tipo:
+- **function**
 
 Parâmetros:
-- **string** `act` - Propósito da mensagem, será utilizado para direcionar a mensagem.
-- **function** `callback` - Função que será chamada quando uma mensagem com o propósito especificado for recebida. O parâmetro enviado para a função é o seguinte:
-  - **object** `msg` - Mensagem enviada pelo servidor.
+- **object** `node` - Nó redimensionado.
+- **object** `html_node` - DOM html associado ao nó redimensionado.
+
+Exemplo:
+```javascript
+
+partition.onnoderesized = (node, html_node) => {
+    //Essa função será executada toda vez que um nó for redimensionado pelo usuário.
+    console.log(node);
+}
+```
   
   
   
@@ -199,10 +237,21 @@ Parâmetros:
 
 <a href="#partition.onnoderemoved" name="partition.onnoderemoved">#</a> partition.__onnoderemoved__
 
-Registra uma função `callback` para receber mensagens com um propósito `act`. Utilizado para receber mensagens do servidor.
+O objeto chama essa função toda vez que um nó é removido da hierarquia.
+
+Tipo:
+- **function**
 
 Parâmetros:
-- **string** `act` - Propósito da mensagem, será utilizado para direcionar a mensagem.
-- **function** `callback` - Função que será chamada quando uma mensagem com o propósito especificado for recebida. O parâmetro enviado para a função é o seguinte:
-  - **object** `msg` - Mensagem enviada pelo servidor.
+- **object** `node` - Nó removido.
+- **object** `html_node` - DOM html associado ao nó removido.
+
+Exemplo:
+```javascript
+
+partition.onnoderemoved = (node, html_node) => {
+    //Essa função será executada toda vez que um nó for removido.
+    console.log(node);
+}
+```
 
