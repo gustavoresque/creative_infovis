@@ -133,9 +133,9 @@ $(document).ready(function(){
 <br>
 <br>
 
-<a href="#partition.addNode" name="partition.addNode">#</a> partition.__addNode__(node)
+<a href="#partition.addNode" name="partition.addNode">#</a> partition.__addNode__(node) ![code|notworking](https://img.shields.io/badge/code-notworking-red.svg)
 
-![code|notworking](https://img.shields.io/badge/code-notworking-red.svg)
+
 
 Adiciona um node via javascript na tela do usuário.
 
@@ -146,7 +146,7 @@ Parâmetros:
 <br>
 <br>
 
-<a href="#partition.removeNode" name="partition.removeNode">#</a> partition.__removeNode__(node)
+<a href="#partition.removeNode" name="partition.removeNode">#</a> partition.__removeNode__(node) ![code|notworking](https://img.shields.io/badge/code-notworking-red.svg)
 
 ![code|notworking](https://img.shields.io/badge/code-notworking-red.svg)
 
