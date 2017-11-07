@@ -1,37 +1,78 @@
-var Sqlite = require('./Sqlite');
-var sqliteconn = new Sqlite();
-var fs = require('fs');
+const fs = require('fs');
+const math = require('mathjs');
+const tableify = require('tableify');
+const Sqlite = require('./Sqlite');
+let database_name = 'sample'
+const base = new Sqlite(database_name);
 
-/* Debug getTables
-base_name = 'sample';
-sqliteconn.getTables(base_name, (data, html) => {
-    console.log(data);
-    console.log(html);
-});
-*/
+let tbl_name1 = 'hearthstone';
+let args1 = {
+    columns: ['name', 'artist', 'text'],
+    filters: [['rarity', '=', 'RARE'], ['cardClass', '=', 'WARLOCK']],
+    order: {
+        columns: [],
+        mode: []
+    }
+}
+// ARRUMAR ESSE BANDO DE ARRAY SOLTO
+let tbl_name2 = 'imaginary_sells';
 
 
-/* Debug getMeta
-base_name = 'sample';
-table_name = 'hearthstone';
-sqliteconn.getMeta(base_name, table_name, (data, html) => {
-    console.log(html);
-});
-*/
+let newArgs2 = {
+  columns: [],
+  filters: [{
+    attribute: 'product_A_sells',
+    operator: '>',
+    value: 900
+  },
+  { attribute: 'product_A_sells',
+    operator: '<',
+    value: 920
+  }
+  ],
+  order: [{
+    column: 'product_A_sells',
+    mode: 'ASC'
+  },
+  {
+    column: 'product_B_sells',
+    mode: 'DESC'
+  }
+],
+}
 
-// Debug constructView
-base_name = 'sample';
-table_name = 'hearthstone';
-attributes = ['name', 'cardClass', 'type', 'set'];
-where = {
-    'rarity': 'LEGENDARY',
-    'cardClass': 'ROGUE'
-};
-orderBy = {columns:['cardClass', 'name' ,'set'], mode:'ASC'}; //Mode ASC DESC
-sqliteconn.constructView(base_name, table_name, attributes, where, orderBy, (data, html) =>{
-    console.log(data);
-    console.log(html);
-    output(html);
+let args2 = {
+  columns: [],
+  filters: [['product_A_sells', '>', '900'], ['product_A_sells', '<', '910']],
+  order: {
+    columns: [],
+    mode: []
+  }
+}
+
+
+
+let tbl_name3 = 'imaginary_climate'
+let args3 = {
+  columns: [],
+  filters: [],
+  order: {
+    columns: [],
+    mode: []
+  }
+}
+
+
+//let tables = base.tables.then( (list) => {output(tableify(list));});
+let table_list = base.tables.then( (json_list) => {
+
+})
+
+let view  = base.select(tbl_name2, newArgs2).then( (view) => {
+  output(tableify(view));
+})
+let meta = base.meta(tbl_name3).then( (meta) => {
+
 });
 
 //OUTPUT
@@ -39,13 +80,13 @@ function output(html){
     var string = `
     <!DOCTYPE html>
     <html>
-    
+
     <body>
     ${html}
     </body>
-    
+
     </html>
-    
+
     `
 
 
