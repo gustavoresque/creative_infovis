@@ -6,7 +6,7 @@ class Sqlite {
         this.knex = require('knex')({
             client: 'sqlite3',
             connection: {
-                filename: "./"+database_name+".sqlite"
+                filename: "./SGBD/sqlite_files/"+database_name+".sqlite" //mudar forma de criação para path ao inves de name
             },
             useNullAsDefault: true
         });

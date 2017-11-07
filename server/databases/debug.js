@@ -1,7 +1,7 @@
 const fs = require('fs');
 const math = require('mathjs');
 const tableify = require('tableify');
-const Sqlite = require('./Sqlite');
+const Sqlite = require('./SGBD/Sqlite');
 let database_name = 'sample'
 const base = new Sqlite(database_name);
 
@@ -27,7 +27,7 @@ let newArgs2 = {
   },
   { attribute: 'product_A_sells',
     operator: '<',
-    value: 920
+    value: 905
   }
   ],
   order: [{

@@ -1,3 +1,5 @@
 /nbproject/
 /.idea/
 server/databases/.DS_Store
+docs/.DS_Store
+server/databases/SGBD/.DS_Store
