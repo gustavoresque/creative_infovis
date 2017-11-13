@@ -5,46 +5,110 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
-    <head>
-        <title>Creative InfoVis</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="libs/jquery-3.2.1.min.js"></script>
-        <script src="communication/websockets.js"></script>
-        <script src="layout/partition_layout.js"></script>
-        
-        <link rel="stylesheet" href="layout/partition_layout.css">
-        <style>
-            #main-area, #main-menu{
-                position: absolute;
-                left: 0px;
-                right: 0px;
-            }
-            #main-menu{
-                height: 35px;
-                top: 0px;
-                border-bottom: 1px solid gray;
-            }
-            #main-area{
-                bottom: 0px;
-                top: 36px;
-            }
-        </style>
+<head>
+    <title>Creative InfoVis</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="libs/jquery-3.2.1.min.js"></script>
+    <script src="communication/websockets.js"></script>
+    <script src="layout/partition_layout.js"></script>
+    <script src="libs/main.js"></script>
+    <link rel="stylesheet" href="layout/partition_layout.css">
+    <script type="text/javascript" src="libs/jquery.easyui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="layout/easyui.css">
+    <link rel="stylesheet" type="text/css" href="layout/icon.css"
 
-        <script>
-            $(document).ready(function(){
-                let partition = new PartitionLayout();
-                partition.onselectednode = function(a,b){
-                    console.log(a,b);
-                };
-            });
-        </script>
-    </head>
-    <body>
-        <div id="main-menu">Menu</div>
-        <div id="main-area">
-            <div class="partition-root"></div>
+
+    
+
+    <style>
+        *{
+            font-family: monospace;
+        }
+    #main-area, #main-menu{
+        position: absolute;
+        left: 0px;
+        right: 0px;
+    }
+    #main-menu{
+        height: 41px;
+        top: 0px;
+        border-bottom: 1px solid gray;
+    }
+    #main-area{
+        position: absolute;
+        bottom: 0px;
+        top: 42px;
+    }
+</style>
+
+<script>
+    $(document).ready(function(){
+        let partition = new PartitionLayout();
+        partition.onselectednode = function(a,b){
+            console.log(a,b);
+        };
+    });
+</script>
+
+</head>
+<body>
+
+<script>
+    $('#mm').menu('show', {
+        left: 200,
+        top: 100
+    });
+
+</script>
+
+<div id="main-menu">
+    <div class="easyui-panel" style="padding:5px;position: absolute;top: 3px;" data-options="border: false">
+        <a href="#" class="easyui-linkbutton" data-options="plain:true">Home</a>
+        <a href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-edit'">Edit</a>
+        <a href="#" class="easyui-menubutton" data-options="menu:'#mm2',iconCls:'icon-help'">Help</a>
+        <a href="#" class="easyui-menubutton" data-options="menu:'#mm3'">About</a>
+    </div>
+    <div id="mm1" style="width:150px;">
+        <div data-options="iconCls:'icon-undo'">Undo</div>
+        <div data-options="iconCls:'icon-redo'">Redo</div>
+        <div class="menu-sep"></div>
+        <div>Cut</div>
+        <div>Copy</div>
+        <div>Paste</div>
+        <div class="menu-sep"></div>
+        <div>
+            <span>Toolbar</span>
+            <div>
+                <div>Address</div>
+                <div>Link</div>
+                <div>Navigation Toolbar</div>
+                <div>Bookmark Toolbar</div>
+                <div class="menu-sep"></div>
+                <div>New Toolbar...</div>
+            </div>
         </div>
-        
-    </body>
+        <div data-options="iconCls:'icon-remove'">Delete</div>
+        <div>Select All</div>
+    </div>
+
+    <div id="mm2" style="width:100px;">
+        <div>Help</div>
+        <div>Update</div>
+        <div>About</div>
+    </div>
+    <div id="mm3" class="menu-content" style="background:#f0f0f0;padding:10px;text-align:left">
+        <img src="http://www.jeasyui.com/images/logo1.png" style="width:150px;height:50px">
+        <p style="font-size:14px;color:#444;">Try jQuery EasyUI to build your modern, interactive, javascript applications.</p>
+    </div>
+    </div>
+
+</div>
+
+
+<div id="main-area">
+    <div class="partition-root"></div>
+</div>
+
+</body>
 </html>
