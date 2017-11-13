@@ -1,5 +1,3 @@
-
-
 const socket = new (require("./communication/ServerSocket.js"))();
 
 //Controller

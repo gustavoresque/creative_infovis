@@ -19,7 +19,7 @@ class Sqlite {
     */
 
 
-    get tables() {
+    tables() {
         let me = this;
 
 
