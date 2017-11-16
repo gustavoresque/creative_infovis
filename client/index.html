@@ -31,36 +31,19 @@ and open the template in the editor.
             }
         </style>
 
-        <script>
-            $(document).ready(function(){
-                let partition = new PartitionLayout();
-                partition.onselectednode = function(a,b){
-                    console.log("node_selected");
-                    console.log(a,b);
-                };
-                partition.onnodecreated = (a,b) => {
-                    console.log("node_created");
-                    console.log(a,b);
-                };
-
-                partition.onnoderemoved = (a,b) => {
-                    console.log("node_removed");
-                    console.log(a,b);
-                };
-
-                partition.onnoderesized = (a,b) => {
-                    console.log("node_resized");
-                    console.log(a,b);
-                };
-            });
-        </script>
+        <script src="main.js"></script>
     </head>
     <body>
-        <div id="main-menu">Menu</div>
+        <div id="main-menu">Menu>
+            <button id='connect'>Connect</button>
+            <button id='meta'>Meta</button>
+        </div>
         <div id="main-area">
             <div class="partition-root"></div>
         </div>
 
+
+
+
     </body>
 </html>
-

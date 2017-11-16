@@ -19,13 +19,12 @@ var ServerSocket  = function(port){
 
 
         socket.on('message', function (message, flags) {
-            console.log(message, flags);
-            // if (flags && !flags.binary) {
-                console.log("hahahah");
+
+            //if (flags && !flags.binary) {
                 var objMsg = JSON.parse(message);
                 if (self.callbacks[objMsg.act])
                     self.callbacks[objMsg.act](socket, objMsg.msg);
-            // }
+            //}
         });
         
         socket.on('close', function(err){
@@ -59,7 +58,6 @@ ServerSocket.prototype.sendBroadcast = function(act, msg){
 
 ServerSocket.prototype.on = function(act, callback){
     this.callbacks[act] = callback;
-
 };
 
 

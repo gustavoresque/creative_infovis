@@ -59,10 +59,3 @@ AppSocket.prototype.on = function(act, callback){
 };
 
 
-var mysocket = new AppSocket();
-
-mysocket.on("open", function(){
-    console.log("deu certo");
-    mysocket.send("tools.a", "olá")
-});
-

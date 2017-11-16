@@ -1,8 +1,4 @@
-
 const socket = new (require("./communication/ServerSocket.js"))();
-
-
-
 
 //Controller
 socket.on("tools.a", function(socket, msg){
