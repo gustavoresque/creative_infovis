@@ -4,22 +4,26 @@ const tableify = require('tableify');
 const Sqlite = require('./SGBD/Sqlite');
 const ServerSocket = require('../communication/ServerSocket.js');
 const socket = new ServerSocket();
+const keygen = require('keygenerator');
+let connections = new Map();
 
 socket.on('connect', (client, msg) => {
     /*
     Objeto msg {
-        str base_path diz o caminho onde a base sqlite está guardada
+        str base_name diz o nome da base que devera ser conectada
     }
      */
-    console.log('socket.on(connect)');
-    let connection = new Sqlite(msg.base_path);
-    socket.send(client, 'connect', connection);
+    let base_path = `../test_unity/sqlite_files/${msg.base_name}`;
+    let key = keygen._();
+    console.log('Mandando chave para o cliente: ', key);
+    connections.set(key, new Sqlite(base_path));
+    socket.send(client, 'connect', {connection_key: key});
 });
 
 socket.on('tables', (client, msg) => {
     /*
     Objeto msg {
-        object connection contém a conexão recebida pelo act connect TODO implementar
+        str connection_key contém a conexão recebida pelo act connect TODO implementar
     }
      */
     msg.connection.tables().then(table_list => {
@@ -28,21 +32,22 @@ socket.on('tables', (client, msg) => {
 });
 socket.on('metadata', (client, msg) => {
     /* Objeto metadata {
-        object connection contém a conexão recebida pelo act connect TODO implementar
+        str connection_key contém a conexão recebida pelo act connect TODO implementar
         str table_name contém a tabela que deseja receber os metadados
     }
      */
-    if (!msg.connection) {console.log(new Error('conectar primeiro'));}
+    if (!connections.has(msg.connection_key)) {console.log(new Error('Conectar Primeiro'));}
     else {
-        console.log(msg.connection);
-        // msg.connection.meta(msg.table_name).then(metadata => {
-        //     socket.send(client, 'metadata', metadata);
-        // });
+        console.log('Realizando conexão com a chave: ', msg.connection_key);
+         let connection = connections.get(msg.connection_key);
+         connection.meta(msg.table_name).then( (result) => {
+            socket.send(client, 'metadata', {result: result});
+         });
     }
 });
 socket.on('select', (client, msg) => {
     /* Objeto search {
-        object connection contém a conexão recebida pelo act connect TODO implementar
+        str connection_key contém a conexão recebida pelo act connect TODO implementar
         str table_name contém a tabela que será relizada a busca
         args objeto que contém os demais parâmetros de busca (Detalhes na documentação)
      */
