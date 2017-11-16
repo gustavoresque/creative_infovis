@@ -1,10 +1,20 @@
 # Databases
 
-- Sqlite
+- [Sqlite](#sqlite)
   - [__new__ Sqlite(database_name)](#Sqlite)
   - [base.__tables__](#base.tables)
   - [base.__meta__(table_name)](#base.meta)
   - [base.__select__(table_name, args)](#base.select)
+
+- [WebService](#webservice)
+  - [__new__ WebService(\[url,method,headers,callback\])](#WebService)
+  - [webservice.__url__](#webservice.url)
+  - [webservice.__method__](#webservice.method)
+  - [webservice.__headers__](#webservice.headers)
+  - [webservice.__onconnect__](#webservice.onconnect)
+  - [webservice.__ondata__](#webservice.ondata)
+  - [webservice.__onerror__](#webservice.onerror)
+  - [webservice.__sendRequest__()](#webservice.sendRequest)
 
 
 ## Sqlite
@@ -205,3 +215,68 @@ O ```resultado``` dessa seleção é, por exemplo:
   }
 ]
 ```
+
+<br>
+<br>
+<br>
+
+## WebService
+
+<br/>
+<br/>
+
+<a href="#WebService" name="WebService">#</a> **new** WebService(database_name)
+
+Construtor de uma conexão com um banco de dados no SGBD Sqlite, cria um objeto que representa a base de dados com métodos para manipulação
+
+Parâmetros:
+- **string** `database_name` - Nome da base de dados que será conectada.
+
+A seguir um exemplo de criação de uma conexão com a base 'my_database'
+
+```javascript
+//Instancia uma nova conexão.
+var Sqlite = require("./databases/Sqlite.js");
+var my_database = new Sqlite('my_database');
+```
+
+<br>
+<br>
+
+<a href="#base.tables" name="base.tables">#</a> base.__tables__
+
+Método getter para obter a lista de tabelas presentes na base de dados. O retorna uma **Promise** que faz uma requisição à base. Ao completar a requisição, a **Promise** resolve um array de objetos com o nome das tabelas e suas respectivas quantidades de colunas e entradas
+
+A seguir um exemplo onde se obtém a lista de tabelas de presentes em 'my_database'
+
+```javascript
+//Atribui à promessa à uma variável table_list
+var table_list = my_database.tables;
+table_list.then( (list) => {
+  //Quando a lista estiver pronta, pode-se realizar ações com ela
+  console.log(list);
+});
+```
+
+A saída ```list``` neste código é, por exemplo:
+```JSON
+[
+  {
+    "Nome": "tabela_A",
+    "Colunas": 100,
+    "Entradas": 1000
+  },
+  {
+    "Nome": "tabela_B",
+    "Colunas": 5,
+    "Entradas": 90
+  },
+  {
+    "Nome": "tabela_C",
+    "Colunas": 25,
+    "Entradas": 130
+  }
+]
+```
+<br>
+<br>

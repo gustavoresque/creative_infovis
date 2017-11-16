@@ -138,7 +138,7 @@ let setupFunction = function () {
 //    first_node.get(0).__node__ = first_part_node;
 
     $partition_root.attr("id", parent_id).on("mousedown", ".partition-node", function(e){
-        partitionObj.selected_node = e.target;
+
         let $node = $(e.target);
 
 
@@ -148,7 +148,12 @@ let setupFunction = function () {
         }
         let $content = $node.children(".partition-content").children();
 
-        partitionObj.onselectednode($node.get(0), $content.get(0));
+        //Se o nó não está atualmente selecionado, então ele selecionad
+        let real_target = $node.get(0);
+        if(partitionObj.selected_node !== real_target){
+            partitionObj.selected_node = real_target;
+            partitionObj.onselectednode(real_target.__node__, real_target);
+        }
     });
 
 
@@ -276,7 +281,7 @@ let setupFunction = function () {
                 //o brother[2] é o objeto responsável pela divisão entre o selected_node e o brother.
                 //Atualiza o valor para a divisão
                 brother[2].value = 1-value;
-                //TODO: quando puxa do meio tem ser o irmão do selected_node! Porra!
+                //DONE - quando puxa do meio tem ser o irmão do selected_node! Porra!
                 //Porque ele abre um novo node no meios dos dois existentes
                 brother[2].node1 = selected_node;
                 brother[2].node2 = brother[0];
@@ -308,6 +313,8 @@ let setupFunction = function () {
             let pageY = putInside(e.pageY, min_top, min_top+
                 $node1.height()+$node2.height());
 
+            console.log("min_top", min_top, "max", min_top+$node1.height()+$node2.height());
+
             removeHighlight(highlight_line_div);
 
             divisor_target.parent().get(0).onmousemove = undefined;
@@ -327,7 +334,7 @@ let setupFunction = function () {
                 ori2 = "bottom";
             }
 
-
+            console.log("ori1", ori1, "ori2", ori2);
             if(isBrother(node.node1[ori2], last_value)){
                 node.node1[ori2] = 1 - node.value;
                 node.node2[ori1] = node.value;
@@ -345,6 +352,8 @@ let setupFunction = function () {
             remove_unvisible(nodes);
             fix(nodes);
             redraw(nodes);
+            partitionObj.onnoderesized(node.node1, $node1);
+            partitionObj.onnoderesized(node.node2, $node2);
         }
     });
 
@@ -404,7 +413,7 @@ let setupFunction = function () {
                 node.parent.children.splice(position,1);
                 return;
             }
-
+            partitionObj.onnoderemoved(node);
         }
 
         for (i = 0; i < node.children.length; i++) {
@@ -498,6 +507,7 @@ let setupFunction = function () {
 
         html_node.get(0).__node__ = new_node;
 
+        partitionObj.onnodecreated(new_node, html_node.get(0));
         return [new_node, html_node, divisor_node];
 
     }
@@ -593,7 +603,8 @@ class PartitionClass{
 
     onselectednode(node){}
     onnodecreated(node){}
-    onnoderesized(){}
+    onnoderesized(node){}
+    onnoderemoved(node){}
 
 
 }

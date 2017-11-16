@@ -1,13 +1,9 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 //var postData = querystring.stringify({
 //  'msg': 'Hello World!'
 //});
 
+//TODO: refatorar para sintaxe de classes.
 var WebService = function (url, method, headers, callback) {
     this.url = url;
     this.method = method;
@@ -76,7 +72,7 @@ WebService.prototype.send = function (callback) {
     });
 
     req.on('error', function (e) {
-        callback(e);;
+        callback(e);
     });
 
 // write data to request body

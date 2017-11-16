@@ -12,7 +12,7 @@ and open the template in the editor.
         <script src="libs/jquery-3.2.1.min.js"></script>
         <script src="communication/websockets.js"></script>
         <script src="layout/partition_layout.js"></script>
-        
+
         <link rel="stylesheet" href="layout/partition_layout.css">
         <style>
             #main-area, #main-menu{
@@ -35,6 +35,21 @@ and open the template in the editor.
             $(document).ready(function(){
                 let partition = new PartitionLayout();
                 partition.onselectednode = function(a,b){
+                    console.log("node_selected");
+                    console.log(a,b);
+                };
+                partition.onnodecreated = (a,b) => {
+                    console.log("node_created");
+                    console.log(a,b);
+                };
+
+                partition.onnoderemoved = (a,b) => {
+                    console.log("node_removed");
+                    console.log(a,b);
+                };
+
+                partition.onnoderesized = (a,b) => {
+                    console.log("node_resized");
                     console.log(a,b);
                 };
             });
@@ -45,6 +60,7 @@ and open the template in the editor.
         <div id="main-area">
             <div class="partition-root"></div>
         </div>
-        
+
     </body>
 </html>
+

@@ -39,7 +39,8 @@ var AppSocket = function (port) {
 
     socket.onmessage = function (e) {
         var objMsg = JSON.parse(e.data);
-        myappsocket.callbacks[objMsg.act](objMsg.msg);
+        if((typeof myappsocket.callbacks[objMsg.act]) === "function")
+            myappsocket.callbacks[objMsg.act](objMsg.msg);
     };
 
     myappsocket.socket = socket;
@@ -54,6 +55,7 @@ AppSocket.prototype.send = function (act, msg) {
 
 AppSocket.prototype.on = function(act, callback){
     this.callbacks[act] = callback;
+    return this;
 };
 
 
@@ -61,6 +63,6 @@ var mysocket = new AppSocket();
 
 mysocket.on("open", function(){
     console.log("deu certo");
-    mysocket.send("tools", "olá")
+    mysocket.send("tools.a", "olá")
 });
 
