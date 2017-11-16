@@ -1,12 +1,12 @@
 const math = require('mathjs');
 
 class Sqlite {
-    constructor(database_name){
-        this.database_name = database_name;
+    constructor(database_path){
+        this.database = database_path;
         this.knex = require('knex')({
             client: 'sqlite3',
             connection: {
-                filename: "./SGBD/sqlite_files/"+database_name+".sqlite" //mudar forma de criação para path ao inves de name
+                filename: this.database
             },
             useNullAsDefault: true
         });
@@ -60,7 +60,8 @@ class Sqlite {
             'Maximum': null,
             'Mean': null,
             'Std': null,
-            'Distribution': null
+            'Distribution': null,
+            'Uniques': null
 
         }})
         .then((meta_list) => {

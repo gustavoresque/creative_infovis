@@ -20,11 +20,11 @@ var ServerSocket  = function(port){
 
         socket.on('message', function (message, flags) {
             
-            if (flags && !flags.binary) {
+            //if (flags && !flags.binary) {
                 var objMsg = JSON.parse(message);
                 if (self.callbacks[objMsg.act])
                     self.callbacks[objMsg.act](socket, objMsg.msg);
-            }
+            //}
         });
         
         socket.on('close', function(err){

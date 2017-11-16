@@ -8,11 +8,11 @@ const socket = new ServerSocket();
 socket.on('connect', (client, msg) => {
     /*
     Objeto msg {
-        str base_name diz o nome da base
-        str base_path diz o caminho onde a base sqlite está guardada TODO implementar
+        str base_path diz o caminho onde a base sqlite está guardada
     }
      */
-    let connection = new Sqlite(msg.base_name);
+    console.log('socket.on(connect)');
+    let connection = new Sqlite(msg.base_path);
     socket.send(client, 'connect', connection);
 });
 
@@ -32,9 +32,13 @@ socket.on('metadata', (client, msg) => {
         str table_name contém a tabela que deseja receber os metadados
     }
      */
-    msg.connection.tables().then(metadata => {
-        socket.send(client, 'metadata', metadata);
-    });
+    if (!msg.connection) {console.log(new Error('conectar primeiro'));}
+    else {
+        console.log(msg.connection.);
+        // msg.connection.meta(msg.table_name).then(metadata => {
+        //     socket.send(client, 'metadata', metadata);
+        // });
+    }
 });
 socket.on('select', (client, msg) => {
     /* Objeto search {
