@@ -34,7 +34,7 @@ socket.on('metadata', (client, msg) => {
      */
     if (!msg.connection) {console.log(new Error('conectar primeiro'));}
     else {
-        console.log(msg.connection.);
+        console.log(msg.connection);
         // msg.connection.meta(msg.table_name).then(metadata => {
         //     socket.send(client, 'metadata', metadata);
         // });
