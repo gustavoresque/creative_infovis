@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+<head>
+    <title>Creative InfoVis</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="libs/jquery-3.2.1.min.js"></script>
+    <script src="communication/websockets.js"></script>
+    <script src="layout/partition_layout.js"></script>
+
+    <script type="text/javascript" src="libs/jquery.easyui.min.js"></script>
+    <link rel="stylesheet" href="layout/partition_layout.css">
+    <link rel="stylesheet" type="text/css" href="layout/easyui.css">
+
+
+    <style>
+        *{
+            font-family: monospace;
+        }
+        #main-area, #main-menu{
+            position: absolute;
+            left: 0px;
+            right: 0px;
+        }
+        #main-menu{
+            height: 41px;
+            top: 0px;
+            border-bottom: 1px solid gray;
+        }
+        #main-area{
+            position: absolute;
+            bottom: 0px;
+            top: 42px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function(){
+            let partition = new PartitionLayout();
+            partition.onselectednode = function(a,b){
+                console.log(a,b);
+            };
+        });
+    </script>
+
+</head>
+<body>
+
+<script>
+    $('#mm').menu('show', {
+        left: 200,
+        top: 100
+    });
+
+</script>
+
+<script src="view/views.js"></script>
+<div id="main-menu">
+    <div class="easyui-panel" style="padding:5px;position: absolute;top: 3px;" data-options="border: false">
+        <a href="#" class="easyui-menubutton" data-options="menu:'#mm1'">View</a>
+        <a href="#" class="easyui-menubutton" data-options="menu:'#mm2'">About</a>
+    </div>
+    <div id="mm1" style="width:150px;">
+        <div>
+            <span>Data</span>
+            <div>
+                <div>SGBD</div>
+                <div >Source</div>
+                <div>Webservice</div>
+                <div>Raw File</div>
+                <div>Machine Learn</div>
+            </div>
+        </div>
+        <div>
+            <span>Visualizations</span>
+            <div>
+                ...
+            </div>
+
+        </div>
+    </div>
+    <div id="mm2" class="menu-content" style="background:#f0f0f0;padding:10px;text-align:left">
+        <p style="font-size:14px;color:#444;">Creative Infovis uma feramenta de visualização da informação</p>
+    </div>
+</div>
+
+
+<div id="main-area">
+    <div class="partition-root"></div>
+</div>
+
+</body>
+</html>
