@@ -7,7 +7,7 @@
   - [base.__select__(table_name, args)](#base.select)
 
 - [WebService](#webservice)
-  - [__new__ WebService(\[url,method,headers,callback\])](#WebService)
+  - [__new__ WebService(\[url,method,headers\])](#WebService)
   - [webservice.__url__](#webservice.url)
   - [webservice.__method__](#webservice.method)
   - [webservice.__headers__](#webservice.headers)
@@ -220,24 +220,35 @@ O ```resultado``` dessa seleção é, por exemplo:
 <br>
 <br>
 
+[//]: <> (-----------------------------------  Web Service ------------------------------------------)
+
 ## WebService
 
 <br/>
 <br/>
 
-<a href="#WebService" name="WebService">#</a> **new** WebService(database_name)
+<a href="#WebService" name="WebService">#</a> **new** WebService(\[url,method,headers\])
 
-Construtor de uma conexão com um banco de dados no SGBD Sqlite, cria um objeto que representa a base de dados com métodos para manipulação
+Construtor de uma conexão com um Web Service.
 
 Parâmetros:
-- **string** `database_name` - Nome da base de dados que será conectada.
+- **string** `url` - URL do Web Service. Esta URL será sempre validada durante a atribuição.
+- **string** `method` - Método HTTP utilizado para enviar uma requisição ao WebService. Pode ser "POST" ou "GET"
+- **object** `headers` - objeto que carrega as informações que serão enviadas no cabeçalho da requisição.
 
 A seguir um exemplo de criação de uma conexão com a base 'my_database'
 
 ```javascript
-//Instancia uma nova conexão.
-var Sqlite = require("./databases/Sqlite.js");
-var my_database = new Sqlite('my_database');
+//Obtem o construtor.
+var WebService = require("./databases/WebService/webservice.js");
+
+var my_database = new WebService("https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=PRECIP_15&stationid=COOP:010008&units=metric&startdate=2010-05-01&enddate=2010-05-31",
+    "GET",
+    {token: "lFsbmWuvzXdlFNfvdRnXdVzbtNakDnuO"},
+);
+
+
+
 ```
 
 <br>
