@@ -5,45 +5,70 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
-    <head>
-        <title>Creative InfoVis</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="libs/jquery-3.2.1.min.js"></script>
-        <script src="communication/websockets.js"></script>
-        <script src="layout/partition_layout.js"></script>
+<head>
+    <title>Creative InfoVis</title>
+    <meta charset="UTF-8">
 
-        <link rel="stylesheet" href="layout/partition_layout.css">
-        <style>
-            #main-area, #main-menu{
-                position: absolute;
-                left: 0px;
-                right: 0px;
-            }
-            #main-menu{
-                height: 35px;
-                top: 0px;
-                border-bottom: 1px solid gray;
-            }
-            #main-area{
-                bottom: 0px;
-                top: 36px;
-            }
-        </style>
-
-        <script src="main.js"></script>
-    </head>
-    <body>
-        <div id="main-menu">Menu>
-            <button id='connect'>Connect</button>
-            <button id='meta'>Meta</button>
-        </div>
-        <div id="main-area">
-            <div class="partition-root"></div>
-        </div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="libs/jquery-3.2.1.min.js"></script>
+    <script src="layout/partition_layout.js"></script>
+    <script type="text/javascript" src="libs/jquery.easyui.min.js"></script>
 
 
+    <script src="communication/websockets.js"></script>
+    <link rel="stylesheet" href="layout/partition_layout.css">
+    <link rel="stylesheet" type="text/css" href="layout/easyui.css">
 
+    <script src="main.js"></script>
 
-    </body>
+    <style>
+        *{
+            font-family: monospace;
+        }
+        #main-area, #main-menu{
+            position: absolute;
+            left: 0px;
+            right: 0px;
+        }
+        #main-menu{
+            height: 41px;
+            top: 0px;
+            border-bottom: 1px solid gray;
+        }
+        #main-area{
+            position: absolute;
+            bottom: 0px;
+            top: 42px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function(){
+            let partition = new PartitionLayout();
+            partition.onselectednode = function(a,b){
+                console.log(a,b);
+            };
+        });
+    </script>
+
+</head>
+<body>
+
+<script>
+
+</script>
+
+<script src="view/views.js"></script>
+<div id="main-menu">
+    <div id="mm" style="padding:5px;position: absolute;top: 3px;" data-options="border: false">
+        <script src="view/menu.js"></script>
+
+    </div>
+</div>
+
+<div id="main-area">
+    <div class="partition-root"></div>
+</div>
+
+</body>
 </html>
