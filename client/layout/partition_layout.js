@@ -143,7 +143,6 @@ let setupFunction = function () {
 
 
         while($node.attr("class").indexOf("partition-node")<0){
-            console.log($node.attr("class"));
             $node = $node.parent();
         }
         let $content = $node.children(".partition-content").children();
@@ -226,7 +225,7 @@ let setupFunction = function () {
 
                 if(selected_node.parent.dir === current_dir){
                     brother = addNode(selected_node.parent, parent_html, current_dir, selected_node);
-                    console.log("caso1", selected_node.parent);
+                    // console.log("caso1", selected_node.parent);
                     let division_changed;
                     for(let d of selected_node.parent.divisions){
                         if(isBrother(d.value, target_position) || isSame(d.value, target_position)){
@@ -256,13 +255,13 @@ let setupFunction = function () {
                     parent_html.children(".partition-content").remove();
                     selected_node = newtarget[0];
 
-                    console.log("caso2", brother);
+                    // console.log("caso2", brother);
 
                 }else{
 
                     brother = addNode(selected_node.parent, parent_html, current_dir);
                     selected_node.parent.dir = current_dir;
-                    console.log("caso3", brother);
+                    // console.log("caso3", brother);
                 }
             }
 
@@ -305,7 +304,7 @@ let setupFunction = function () {
             // let min_left = Math.min(node.node1.left * parent_w, node.node2.left * parent_w);
             // let min_top = Math.min(node.node1.top * parent_h, node.node2.top * parent_h);
             let min_left = Math.min($node1.offset().left, $node2.offset().left);
-            let min_top = Math.min($node1.offset().top, $node1.offset().top);
+            let min_top = Math.min($node1.offset().top, $node2.offset().top);
 
 
             let pageX = putInside(e.pageX, min_left, min_left
@@ -334,7 +333,6 @@ let setupFunction = function () {
                 ori2 = "bottom";
             }
 
-            console.log("ori1", ori1, "ori2", ori2);
             if(isBrother(node.node1[ori2], last_value)){
                 node.node1[ori2] = 1 - node.value;
                 node.node2[ori1] = node.value;
@@ -561,18 +559,14 @@ let setupFunction = function () {
             ctrl_press = true
             $(".partition-line").css("display", "block");
         }
-    })
-        .on("keyup", function(e){
+    }).on("keyup", function(e){
 
-            //CTRL
-            if(e.keyCode === 17){
-                ctrl_press = false;
-                $(".partition-line").css("display", "none");
-            }
-        });
-
-
-    $("")
+        //CTRL
+        if(e.keyCode === 17){
+            ctrl_press = false;
+            $(".partition-line").css("display", "none");
+        }
+    });
 
 };
 
